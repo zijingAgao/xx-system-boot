@@ -1,8 +1,16 @@
 server:
   port: 9999
 
+
 spring:
   data:
     mongodb:
-      #uri: mongodb://root:23456@127.0.0.1:27017/xx_system?authSource=admin
+#      uri: mongodb://root:23456@127.0.0.1:27017/xx_system?authSource=admin
       uri: mongodb://127.0.0.1:27017/xx_system
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 8
+    connect-timeout: 10000
+    timeout: 10000
