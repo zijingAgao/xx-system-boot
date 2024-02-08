@@ -15,6 +15,10 @@ import java.util.List;
 public enum AclEntryPerm {
     USER_VIEW("用户查看权限"),
     USER_MGT("用户管理权限", USER_VIEW),
+    /**
+     * 最低权限要求，认证即可访问
+     */
+    AUTHED("已认证"),
     ;
 
     /**
