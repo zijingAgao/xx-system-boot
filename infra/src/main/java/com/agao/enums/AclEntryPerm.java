@@ -1,10 +1,8 @@
 package com.agao.enums;
 
 import com.google.common.collect.Lists;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.Getter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ public enum AclEntryPerm {
      */
     private final String desc;
     /**
-     * 子权限 eg：mgt包含view
+     * 子权限 eg：mgt包含view 支持子一级
      */
     private final AclEntryPerm[] subPerms;
 

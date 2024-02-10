@@ -22,8 +22,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Autowired private JsonLoginSuccessHandler successHandler;
-    @Autowired private JsonLoginFailHandler failHandler;
+    @Autowired
+    private JsonLoginSuccessHandler successHandler;
+    @Autowired
+    private JsonLoginFailHandler failHandler;
 
 
     @Bean
@@ -56,7 +58,6 @@ public class WebSecurityConfig {
                 .antMatchers("/doc.html")
                 ;
     }
-
 
     @Bean
     public PasswordEncoder PasswordEncoder() {

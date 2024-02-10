@@ -1,6 +1,7 @@
 package com.agao.common;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
  * @author Agao
  * @date 2024/2/6 10:08
  */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommonResp<T> {
@@ -43,6 +45,10 @@ public class CommonResp<T> {
 
     public static <T> CommonResp<T> error(Integer code, String msg) {
         return new CommonResp<>(code, msg, null);
+    }
+
+    public static <T> CommonResp<T> error(Exception e) {
+        return CommonResp.error(500, e.getMessage());
     }
 
 }

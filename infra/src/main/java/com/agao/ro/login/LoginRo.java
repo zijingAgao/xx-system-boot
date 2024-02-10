@@ -1,4 +1,4 @@
-package com.agao.ro;
+package com.agao.ro.login;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

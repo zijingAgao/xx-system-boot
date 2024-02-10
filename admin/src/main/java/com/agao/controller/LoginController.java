@@ -1,9 +1,7 @@
 package com.agao.controller;
 
-import com.agao.ro.LoginRo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,12 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class LoginController {
-
-    @ApiOperation(value = "表单登录")
-    @PostMapping("/login")
-    public String login(@RequestBody @Validated LoginRo loginRo) {
-        return loginRo.getUsername();
-    }
 
     @ApiOperation(value = "获取登录验证码")
     @GetMapping("/login/captcha")

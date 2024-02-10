@@ -1,7 +1,7 @@
 package com.agao.security;
 
 import com.agao.common.CommonResp;
-import com.agao.enums.LoginError;
+import com.agao.exception.user.UserExceptionCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,8 @@ public class JsonLoginFailHandler implements AuthenticationFailureHandler {
 
     private CommonResp<?> resolveException(AuthenticationException e) {
         if (e instanceof DisabledException) {
-            return CommonResp.error(LoginError.USER_DISABLE.getCode(), LoginError.USER_DISABLE.getMsg());
+            return CommonResp.error(UserExceptionCode.USER_DISABLE.getCode(), UserExceptionCode.USER_DISABLE.getMsg());
         }
-        return CommonResp.error(LoginError.BAD_CREDENTIALS.getCode(), LoginError.BAD_CREDENTIALS.getMsg());
+        return CommonResp.error(UserExceptionCode.BAD_CREDENTIALS.getCode(), UserExceptionCode.BAD_CREDENTIALS.getMsg());
     }
 }

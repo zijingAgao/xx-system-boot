@@ -2,6 +2,7 @@ package com.agao.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.data.annotation.*;
 
 /**
@@ -11,14 +12,19 @@ import org.springframework.data.annotation.*;
 @Getter
 @Setter
 public abstract class BaseAuditEntity {
+    @JsonIgnore
     @CreatedDate
     private Long createdTime;
+    @JsonIgnore
     @CreatedBy
     private String createdUsername;
+    @JsonIgnore
     @LastModifiedDate
     private Long modifiedTime;
+    @JsonIgnore
     @LastModifiedBy
     private String modifiedUsername;
+    @JsonIgnore
     @Version
     private Long version;
 }
