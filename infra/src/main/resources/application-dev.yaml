@@ -3,6 +3,9 @@ server:
 
 
 xx-system:
+  web:
+    security:
+      max-sessions: 1
   swagger:
     enable: true
 

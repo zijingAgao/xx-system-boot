@@ -18,6 +18,10 @@ public class CommonResp<T> {
     private String msg;
     private T data;
 
+    public CommonResp(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
 
     public static <T> CommonResp<T> success() {
         return new CommonResp<>(200, "success", null);

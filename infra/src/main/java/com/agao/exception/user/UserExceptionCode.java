@@ -20,7 +20,7 @@ public enum UserExceptionCode implements IExceptionEnum {
     BAD_CREDENTIALS(1007, "账号或密码错误"),
     USER_DISABLE(1008, "用户被锁定"),
     EMPTY_VALIDATE_CODE(1009, "验证码为空"),
-    INVALID_VALIDATE_CODE(1010, "验证码错误");
+    INVALID_VALIDATE_CODE(1010, "验证码错误"),
     ;
 
     private Integer code;

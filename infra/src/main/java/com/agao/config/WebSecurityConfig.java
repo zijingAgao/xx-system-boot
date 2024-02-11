@@ -1,9 +1,9 @@
 package com.agao.config;
 
 import com.agao.enums.AclEntryPerm;
-import com.agao.security.JsonLoginFailHandler;
-import com.agao.security.JsonLoginSuccessHandler;
+import com.agao.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,12 +21,20 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @EnableWebSecurity
 public class WebSecurityConfig {
-
     @Autowired
     private JsonLoginSuccessHandler successHandler;
     @Autowired
     private JsonLoginFailHandler failHandler;
-
+    @Autowired
+    private JsonLogoutSuccessHandler logoutSuccessHandler;
+    @Autowired
+    private JsonSessionInformationExpiredStrategy jsonSessionInformationExpiredStrategy;
+    @Autowired
+    private JsonAccessDeniedHandler jsonAccessDeniedHandler;
+    @Autowired
+    private JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
+    @Value("${xx-system.web.security.max-sessions:1}")
+    private Integer maxSessions;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,7 +52,21 @@ public class WebSecurityConfig {
                 .loginProcessingUrl("/api/login")
                 .successHandler(successHandler)
                 .failureHandler(failHandler)
-
+                .and()
+                // 登出
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .and()
+                // 异常
+                .exceptionHandling()
+                .accessDeniedHandler(jsonAccessDeniedHandler)
+                .authenticationEntryPoint(jsonAuthenticationEntryPoint)
+                .and()
+                // 会话管理
+                .sessionManagement()
+                .maximumSessions(maxSessions)
+                .expiredSessionStrategy(jsonSessionInformationExpiredStrategy)
         ;
         return http.build();
     }
