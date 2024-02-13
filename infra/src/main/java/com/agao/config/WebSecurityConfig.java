@@ -1,15 +1,23 @@
 package com.agao.config;
 
-import com.agao.enums.AclEntryPerm;
-import com.agao.security.*;
+import com.agao.security.enums.AclEntryPerm;
+import com.agao.security.filter.TokenExpireRemindFilter;
+import com.agao.security.handler.*;
+import com.agao.security.userdetails.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -28,17 +36,16 @@ public class WebSecurityConfig {
     @Autowired
     private JsonLogoutSuccessHandler logoutSuccessHandler;
     @Autowired
-    private JsonSessionInformationExpiredStrategy jsonSessionInformationExpiredStrategy;
-    @Autowired
     private JsonAccessDeniedHandler jsonAccessDeniedHandler;
     @Autowired
     private JsonAuthenticationEntryPoint jsonAuthenticationEntryPoint;
-    @Value("${xx-system.web.security.max-sessions:1}")
-    private Integer maxSessions;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().disable()
+        http.csrf().disable()
                 .authorizeHttpRequests()
                 // 不需要认证的部分
                 .antMatchers("/error").permitAll()
@@ -63,10 +70,13 @@ public class WebSecurityConfig {
                 .accessDeniedHandler(jsonAccessDeniedHandler)
                 .authenticationEntryPoint(jsonAuthenticationEntryPoint)
                 .and()
-                // 会话管理
+                // 关闭session会话管理
                 .sessionManagement()
-                .maximumSessions(maxSessions)
-                .expiredSessionStrategy(jsonSessionInformationExpiredStrategy)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+//                 token 过期提醒过滤器
+                .addFilterAfter(new TokenExpireRemindFilter(), BearerTokenAuthenticationFilter.class)
+//                .addFilterAfter()
         ;
         return http.build();
     }
@@ -81,8 +91,20 @@ public class WebSecurityConfig {
                 ;
     }
 
+
     @Bean
-    public PasswordEncoder PasswordEncoder() {
+    public AuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsServiceImpl);
+        provider.setPasswordEncoder(passwordEncoder());
+        // 这里要隐藏系统默认的提示信息，否则一直显示账户或密码错误
+        provider.setHideUserNotFoundExceptions(false);
+        return provider;
+    }
+
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

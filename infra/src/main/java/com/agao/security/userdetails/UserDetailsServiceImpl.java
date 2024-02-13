@@ -17,7 +17,7 @@ import java.util.Set;
  * @date 2024/2/6 16:23
  */
 @Component
-public class AuthUserDetailsImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

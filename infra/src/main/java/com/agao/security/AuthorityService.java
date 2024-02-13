@@ -1,8 +1,8 @@
 package com.agao.security;
 
 import com.agao.entity.user.User;
-import com.agao.enums.AclEntryPerm;
-import com.agao.enums.UserRole;
+import com.agao.security.enums.AclEntryPerm;
+import com.agao.security.enums.UserRole;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,8 +1,10 @@
 package com.agao.entity.user;
 
 import com.agao.entity.BaseAuditEntity;
+import com.agao.security.userdetails.AuthUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -39,4 +41,10 @@ public class User extends BaseAuditEntity {
      * 是否启用
      */
     private boolean enabled = true;
+
+    public static User convertForm(AuthUser authUser) {
+        User user = new User();
+        BeanUtils.copyProperties(authUser, user);
+        return user;
+    }
 }

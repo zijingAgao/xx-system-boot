@@ -3,17 +3,17 @@ server:
 
 
 xx-system:
-  web:
-    security:
-      max-sessions: 1
   swagger:
     enable: true
+  # 记住我得有效期
+  remember-me:
+    expire: 7d
 
 
 spring:
   data:
     mongodb:
-      #      uri: mongodb://root:23456@127.0.0.1:27017/xx_system?authSource=admin
+      # uri: mongodb://root:23456@127.0.0.1:27017/xx_system?authSource=admin
       uri: mongodb://127.0.0.1:27017/xx_system
 
   redis:

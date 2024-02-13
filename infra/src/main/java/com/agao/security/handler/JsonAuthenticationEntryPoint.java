@@ -1,4 +1,4 @@
-package com.agao.security;
+package com.agao.security.handler;
 
 import com.agao.common.CommonResp;
 import com.agao.exception.system.XxSystemExceptionCode;
@@ -6,28 +6,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.web.session.SessionInformationExpiredEvent;
-import org.springframework.security.web.session.SessionInformationExpiredStrategy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
+ * 登录过期的处理
+ *
  * @author Agao
- * @date 2024/2/11 21:59
+ * @date 2024/2/11 22:01
  */
 @Slf4j
 @Component
-public class JsonSessionInformationExpiredStrategy implements SessionInformationExpiredStrategy {
+public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Autowired
     private ObjectMapper objectMapper;
 
     @Override
-    public void onExpiredSessionDetected(SessionInformationExpiredEvent event) throws IOException, ServletException {
-        HttpServletResponse response = event.getResponse();
-        CommonResp<?> resp = CommonResp.error(XxSystemExceptionCode.LOGIN_EXPIRE.getCode(), XxSystemExceptionCode.LOGIN_EXPIRE.getMsg());
+    public void commence(HttpServletRequest request,
+                         HttpServletResponse response,
+                         AuthenticationException authException) throws IOException {
+        CommonResp<?> resp = CommonResp.error(XxSystemExceptionCode.REPEAT_LOGIN.getCode(), XxSystemExceptionCode.REPEAT_LOGIN.getMsg());
+
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(resp));

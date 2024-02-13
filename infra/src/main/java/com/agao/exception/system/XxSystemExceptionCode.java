@@ -30,7 +30,7 @@ public enum XxSystemExceptionCode implements IExceptionEnum {
 
     @Override
     public String getMsg() {
-        return this.getMsg();
+        return this.msg;
     }
 
     @Override

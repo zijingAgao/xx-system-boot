@@ -1,7 +1,7 @@
 package com.agao.service;
 
 import com.agao.entity.user.User;
-import com.agao.enums.UserRole;
+import com.agao.security.enums.UserRole;
 import com.agao.repo.UserRepository;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
@@ -30,5 +30,11 @@ public class LoginTest {
         user.setEnabled(true);
 
         userRepository.save(user);
+    }
+
+    @Test
+    void find(){
+        User user = userRepository.findFirstByUsername("agao@gmail.com");
+        System.out.println(user);
     }
 }

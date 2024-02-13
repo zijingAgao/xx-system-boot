@@ -1,4 +1,4 @@
-package com.agao.enums;
+package com.agao.security.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

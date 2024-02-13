@@ -4,6 +4,7 @@ import com.agao.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,11 +19,14 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthUser implements UserDetails {
+    private String id;
     private String username;
     private String password;
     private List<String> roles;
     private Set<GrantedAuthority> authorities;
     private boolean enabled;
+    private String sessionId;
+    private boolean rememberMe;
 
     public AuthUser(User user, Set<GrantedAuthority> grantedAuthorities) {
         this.username = user.getUsername();
@@ -45,5 +49,14 @@ public class AuthUser implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+
+    public static AuthUser convertForm(User user, boolean rememberMe, String sessionId) {
+        AuthUser authUser = new AuthUser();
+        BeanUtils.copyProperties(user, authUser);
+        authUser.setRememberMe(rememberMe);
+        authUser.setSessionId(sessionId);
+        return authUser;
     }
 }

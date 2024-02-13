@@ -1,4 +1,4 @@
-package com.agao.enums;
+package com.agao.security.enums;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
