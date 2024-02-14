@@ -1,6 +1,10 @@
 package com.agao.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Agao
@@ -8,4 +12,16 @@ import lombok.Data;
  */
 @Data
 public class UserVo {
+    @ApiModelProperty(value = "id")
+    private String id;
+    @ApiModelProperty(value = "昵称")
+    private String nickName;
+    @ApiModelProperty(value = "账号,邮箱")
+    private String username;
+    @ApiModelProperty(value = "手机号")
+    private String mobile;
+    @ApiModelProperty(value = "角色")
+    private List<String> roles = new ArrayList<>();
+    @ApiModelProperty(value = "是否启用")
+    private boolean enabled = true;
 }

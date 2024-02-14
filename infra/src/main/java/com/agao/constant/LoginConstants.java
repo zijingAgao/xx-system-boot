@@ -11,6 +11,8 @@ public class LoginConstants {
      */
     public static final String TOKEN_EXPIRE_REMIND_HEADER = "XX-SYSTEM-TOKEN-EXPIRE-AT";
 
+    public static final String AUTH_ERROR_RESPONSE_HEADER = "XX-SYSTEM-Authentication-Error";
+
 
     /**
      * 记住我的参数

@@ -6,12 +6,17 @@ import com.agao.entity.user.User;
 import com.agao.ro.user.UserQueryRo;
 import com.agao.ro.user.UserUpdateRo;
 import com.agao.service.user.UserService;
+import com.agao.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.assertj.core.util.Lists;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Agao
@@ -26,16 +31,29 @@ public class UserController {
 
     @ApiOperation(value = "分页查询用户")
     @GetMapping("/api/user")
-    public CommonResp<PageData<User>> page(UserQueryRo ro) {
+    public CommonResp<List<UserVo>> page(UserQueryRo ro) {
         Page<User> page = userService.page(ro);
-        return CommonResp.success(new PageData<>(page));
+        long total = page.getTotalElements();
+        if (total == 0) {
+            return CommonResp.success(new ArrayList<>(), page);
+        }
+        // 转vo
+        List<UserVo> vos = new ArrayList<>();
+        for (User user : page.getContent()) {
+            UserVo vo = new UserVo();
+            BeanUtils.copyProperties(user, vo);
+            vos.add(vo);
+        }
+        return CommonResp.success(vos, page);
     }
 
     @ApiOperation(value = "查询用户详情")
     @GetMapping("/api/user/{id}")
-    public CommonResp<User> findOne(@PathVariable String id) {
+    public CommonResp<UserVo> findOne(@PathVariable String id) {
         User user = userService.findOne(id);
-        return CommonResp.success(user);
+        UserVo vo = new UserVo();
+        BeanUtils.copyProperties(user, vo);
+        return CommonResp.success(vo);
     }
 
     @ApiOperation(value = "新增用户")

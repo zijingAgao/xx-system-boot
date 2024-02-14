@@ -1,22 +1,22 @@
 package com.agao.config;
 
-import com.agao.security.enums.AclEntryPerm;
 import com.agao.security.filter.TokenExpireRemindFilter;
 import com.agao.security.handler.*;
+import com.agao.security.jwt.CustomGrantedAuthoritiesConverter;
+import com.agao.security.jwt.JwtCodec;
+import com.agao.security.jwt.LoginExpiredAuthenticationEntryPoint;
 import com.agao.security.userdetails.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -42,6 +42,8 @@ public class WebSecurityConfig {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
+    @Autowired
+    private JwtCodec jwtCodec;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -51,8 +53,15 @@ public class WebSecurityConfig {
                 .antMatchers("/error").permitAll()
                 .antMatchers("/login", "/api/login", "/api/login/captcha", "/api/manifest").permitAll()
                 // 其他请求需要认证
-                .anyRequest().hasAuthority(AclEntryPerm.AUTHED.name())
+//                .anyRequest().hasAuthority(AclEntryPerm.AUTHED.name())
+                .anyRequest().authenticated()
                 .and()
+                .oauth2ResourceServer(oauth2 -> {
+                    oauth2.authenticationEntryPoint(new LoginExpiredAuthenticationEntryPoint())
+                            .jwt()
+                            .decoder(jwtCodec)
+                            .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                })
                 // 表单登录
                 .formLogin()
                 // 登录路由
@@ -88,6 +97,8 @@ public class WebSecurityConfig {
                 .antMatchers("/swagger-resources/**")
                 .antMatchers("/v3/**")
                 .antMatchers("/doc.html")
+                .antMatchers("/webjars/**")
+                .antMatchers("/favicon.ico")
                 ;
     }
 
@@ -100,6 +111,13 @@ public class WebSecurityConfig {
         // 这里要隐藏系统默认的提示信息，否则一直显示账户或密码错误
         provider.setHideUserNotFoundExceptions(false);
         return provider;
+    }
+
+    @Bean
+    protected JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new CustomGrantedAuthoritiesConverter());
+        return jwtAuthenticationConverter;
     }
 
 

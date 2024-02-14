@@ -1,6 +1,7 @@
 package com.agao.ro.user;
 
 import com.agao.ro.PageRo;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserQueryRo extends PageRo {
-
-
+    @ApiModelProperty(value = "邮箱")
+    private String username;
 }

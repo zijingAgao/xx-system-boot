@@ -26,7 +26,7 @@ public class XxSystemInit implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         if (userRepository.count() == 0) {
-            log.info("start init xx-system admin");
+            log.info("start init default xx-system admin user");
             User user = new User();
             user.setUsername("admin@gmail.com");
             user.setMobile("13800000000");
@@ -34,6 +34,7 @@ public class XxSystemInit implements ApplicationRunner {
             user.setEnabled(true);
             user.setPassword(passwordEncoder.encode("@ppEx2024"));
             userRepository.save(user);
+            log.info("finish init default xx-system admin user");
         }
 
     }

@@ -1,6 +1,7 @@
 package com.agao.security.jwt;
 
 import com.agao.security.userdetails.AuthUser;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -8,11 +9,14 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -25,13 +29,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class JwtCodec implements InitializingBean {
-
+public class JwtCodec implements InitializingBean, JwtDecoder {
+    public static final String PARTIAL_GRANTED_AUTHORITY_SUFFIX = ".SCOPE";
     private static final String SIGN_ALGO = "HmacSHA512";
     private static final Integer CLOCK_SKEW_SECONDS = 5;
     private JWSSigner signer;
     private NimbusJwtDecoder decoder;
-    private NimbusJwtDecoder rowDecoder;
+//    private NimbusJwtDecoder rowDecoder;
 
     /**
      * 编码认证token
@@ -103,8 +107,25 @@ public class JwtCodec implements InitializingBean {
     }
 
     @Override
+    public Jwt decode(String token) throws JwtException {
+        return decoder.decode(token);
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         SecretKey key = getSecretKey();
         signer = new MACSigner(key);
+        this.decoder = NimbusJwtDecoder.withSecretKey(key).build();
+//        this.decoder.setJwtValidator(
+//                new DelegatingOAuth2TokenValidator<>(
+//                        ImmutableList.of(
+//                                new JwtTimestampValidator(Duration.of(CLOCK_SKEW_SECONDS, ChronoUnit.SECONDS)),
+//                                timeoutValidator,
+//                                blacklistValidator)));
+
+        this.decoder = NimbusJwtDecoder.withSecretKey(key).build();
+        this.decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>());
     }
+
+
 }

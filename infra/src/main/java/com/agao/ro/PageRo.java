@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author Agao
@@ -19,7 +20,8 @@ public class PageRo {
     @ApiModelProperty(value = "页面大小", example = "10")
     private int size = PageConstants.DEFAULT_SIZE;
 
-    public Pageable getPageable() {
+    @ApiIgnore
+    public Pageable obtainPageable() {
         return PageRequest.of(page, size);
     }
 }

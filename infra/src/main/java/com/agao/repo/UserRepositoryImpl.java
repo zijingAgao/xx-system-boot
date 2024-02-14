@@ -9,8 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author Agao
@@ -30,7 +32,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public Page<User> pageByCondition(UserQueryRo ro) {
-        Pageable pageable = ro.getPageable();
+        Pageable pageable = ro.obtainPageable();
         Criteria criteria = generateCriteria(ro);
         return mongoPageHelper.page(criteria, pageable, User.class);
     }
@@ -40,6 +42,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if (ro == null) {
             return criteria;
         }
+        String username = ro.getUsername();
+
+        if (StringUtils.hasText(username)) {
+            Pattern pattern = Pattern.compile(username, Pattern.CASE_INSENSITIVE);
+            criteria.regex(pattern);
+        }
+
         // todo: 填充user参数
 
         return criteria;

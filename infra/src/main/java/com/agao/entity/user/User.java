@@ -22,7 +22,11 @@ public class User extends BaseAuditEntity {
     @Id
     private String id;
     /**
-     * 账号
+     * 昵称
+     */
+    private String nickName;
+    /**
+     * 账号,邮箱
      */
     private String username;
     /**

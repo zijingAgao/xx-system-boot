@@ -2,6 +2,7 @@ server:
   port: 9999
 
 
+
 xx-system:
   swagger:
     enable: true
@@ -14,10 +15,12 @@ spring:
   data:
     mongodb:
       # uri: mongodb://root:23456@127.0.0.1:27017/xx_system?authSource=admin
-      uri: mongodb://127.0.0.1:27017/xx_system
+#      uri: mongodb://127.0.0.1:27017/xx_system
+      uri: mongodb://1.14.64.132:27017/xx_system
 
   redis:
-    host: 127.0.0.1
+#    host: 127.0.0.1
+    host: 1.14.64.132
     port: 6379
     database: 8
     connect-timeout: 10000
