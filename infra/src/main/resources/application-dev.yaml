@@ -1,15 +1,9 @@
 server:
   port: 9999
 
-
-
-xx-system:
-  swagger:
-    enable: true
-  # 记住我得有效期
-  remember-me:
-    expire: 7d
-
+logging:
+  file:
+    name: log.log
 
 spring:
   data:
@@ -30,3 +24,9 @@ spring:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
 
+xx-system:
+  swagger:
+    enable: true
+  # 记住我得有效期
+  remember-me:
+    expire: 7d
