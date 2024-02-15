@@ -1,15 +1,13 @@
 package com.agao.controller;
 
 import com.agao.common.CommonResp;
-import com.agao.common.PageData;
-import com.agao.entity.user.User;
-import com.agao.ro.user.UserQueryRo;
-import com.agao.ro.user.UserUpdateRo;
-import com.agao.service.user.UserService;
+import com.agao.user.entity.User;
+import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserUpdateRo;
+import com.agao.user.service.UserService;
 import com.agao.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.assertj.core.util.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,7 +29,7 @@ public class UserController {
 
     @ApiOperation(value = "分页查询用户")
     @GetMapping("/api/user")
-    public CommonResp<List<UserVo>> page(UserQueryRo ro) {
+    public CommonResp<List<UserVo>> page(UserQueryAbstract ro) {
         Page<User> page = userService.page(ro);
         long total = page.getTotalElements();
         if (total == 0) {

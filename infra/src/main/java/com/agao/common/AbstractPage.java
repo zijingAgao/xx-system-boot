@@ -1,6 +1,5 @@
-package com.agao.ro;
+package com.agao.common;
 
-import com.agao.constant.PageConstants;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +13,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @Getter
 @Setter
-public class PageRo {
+public abstract class AbstractPage {
     @ApiModelProperty(value = "当前页", example = "0")
     private int page = PageConstants.DEFAULT_PAGE;
     @ApiModelProperty(value = "页面大小", example = "10")

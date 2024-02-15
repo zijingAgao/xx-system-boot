@@ -1,6 +1,6 @@
 package com.agao.security.jwt;
 
-import com.agao.constant.LoginConstants;
+import com.agao.login.constant.LoginConstants;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.jwt.JwtValidationException;

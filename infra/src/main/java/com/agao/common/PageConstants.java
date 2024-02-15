@@ -1,4 +1,4 @@
-package com.agao.constant;
+package com.agao.common;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

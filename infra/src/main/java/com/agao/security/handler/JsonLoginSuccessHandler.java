@@ -1,8 +1,8 @@
 package com.agao.security.handler;
 
 import com.agao.common.CommonResp;
-import com.agao.constant.LoginConstants;
-import com.agao.entity.user.User;
+import com.agao.login.constant.LoginConstants;
+import com.agao.user.entity.User;
 import com.agao.security.LoginData;
 import com.agao.security.jwt.AuthToken;
 import com.agao.security.jwt.AuthTokenService;

@@ -1,4 +1,4 @@
-package com.agao.entity;
+package com.agao.common;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import org.springframework.data.annotation.*;
  */
 @Getter
 @Setter
-public abstract class BaseAuditEntity {
+public abstract class BaseEntity {
     @JsonIgnore
     @CreatedDate
     private Long createdTime;

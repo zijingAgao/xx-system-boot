@@ -1,8 +1,8 @@
 package com.agao.service;
 
-import com.agao.entity.user.User;
+import com.agao.user.entity.User;
 import com.agao.security.enums.UserRole;
-import com.agao.repo.UserRepository;
+import com.agao.user.repo.UserRepository;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

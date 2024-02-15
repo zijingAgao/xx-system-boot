@@ -1,4 +1,4 @@
-package com.agao.constant;
+package com.agao.login.constant;
 
 /**
  * @author Agao

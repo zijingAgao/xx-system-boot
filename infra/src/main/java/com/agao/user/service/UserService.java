@@ -1,11 +1,11 @@
-package com.agao.service.user;
+package com.agao.user.service;
 
-import com.agao.entity.user.User;
+import com.agao.user.entity.User;
 import com.agao.exception.user.UserException;
 import com.agao.exception.user.UserExceptionCode;
-import com.agao.repo.UserRepository;
-import com.agao.ro.user.UserQueryRo;
-import com.agao.ro.user.UserUpdateRo;
+import com.agao.user.repo.UserRepository;
+import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserUpdateRo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public Page<User> page(UserQueryRo ro) {
+    public Page<User> page(UserQueryAbstract ro) {
         return userRepository.pageByCondition(ro);
     }
 

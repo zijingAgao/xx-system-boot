@@ -1,7 +1,7 @@
-package com.agao.repo;
+package com.agao.user.repo;
 
-import com.agao.entity.user.User;
-import com.agao.ro.user.UserQueryRo;
+import com.agao.user.entity.User;
+import com.agao.user.ro.UserQueryAbstract;
 import com.agao.utils.MongoPageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,19 +25,19 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private MongoPageHelper mongoPageHelper;
 
     @Override
-    public List<User> findByCondition(UserQueryRo ro) {
+    public List<User> findByCondition(UserQueryAbstract ro) {
         Criteria criteria = generateCriteria(ro);
         return mongoTemplate.find(Query.query(criteria), User.class);
     }
 
     @Override
-    public Page<User> pageByCondition(UserQueryRo ro) {
+    public Page<User> pageByCondition(UserQueryAbstract ro) {
         Pageable pageable = ro.obtainPageable();
         Criteria criteria = generateCriteria(ro);
         return mongoPageHelper.page(criteria, pageable, User.class);
     }
 
-    private Criteria generateCriteria(UserQueryRo ro) {
+    private Criteria generateCriteria(UserQueryAbstract ro) {
         Criteria criteria = new Criteria();
         if (ro == null) {
             return criteria;

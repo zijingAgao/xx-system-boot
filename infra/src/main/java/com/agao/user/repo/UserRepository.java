@@ -1,6 +1,6 @@
-package com.agao.repo;
+package com.agao.user.repo;
 
-import com.agao.entity.user.User;
+import com.agao.user.entity.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**

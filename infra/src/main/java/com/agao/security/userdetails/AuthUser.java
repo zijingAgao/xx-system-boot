@@ -1,6 +1,6 @@
 package com.agao.security.userdetails;
 
-import com.agao.entity.user.User;
+import com.agao.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

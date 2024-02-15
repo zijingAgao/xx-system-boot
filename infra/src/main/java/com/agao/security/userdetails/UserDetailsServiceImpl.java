@@ -1,7 +1,7 @@
 package com.agao.security.userdetails;
 
-import com.agao.entity.user.User;
-import com.agao.repo.UserRepository;
+import com.agao.user.entity.User;
+import com.agao.user.repo.UserRepository;
 import com.agao.security.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

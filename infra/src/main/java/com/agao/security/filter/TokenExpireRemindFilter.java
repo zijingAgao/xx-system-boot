@@ -1,6 +1,6 @@
 package com.agao.security.filter;
 
-import com.agao.constant.LoginConstants;
+import com.agao.login.constant.LoginConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

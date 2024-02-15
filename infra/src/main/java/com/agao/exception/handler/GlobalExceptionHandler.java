@@ -1,4 +1,4 @@
-package com.agao.handler;
+package com.agao.exception.handler;
 
 import com.agao.exception.CommonException;
 import com.agao.common.CommonResp;

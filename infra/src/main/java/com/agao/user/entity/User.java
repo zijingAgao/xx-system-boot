@@ -1,6 +1,6 @@
-package com.agao.entity.user;
+package com.agao.user.entity;
 
-import com.agao.entity.BaseAuditEntity;
+import com.agao.common.BaseEntity;
 import com.agao.security.userdetails.AuthUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @Document
 @EqualsAndHashCode(callSuper = true)
-public class User extends BaseAuditEntity {
+public class User extends BaseEntity {
     @Id
     private String id;
     /**

@@ -1,7 +1,7 @@
-package com.agao.service.init;
+package com.agao.init;
 
-import com.agao.entity.user.User;
-import com.agao.repo.UserRepository;
+import com.agao.user.entity.User;
+import com.agao.user.repo.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;

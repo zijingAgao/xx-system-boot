@@ -1,6 +1,6 @@
 package com.agao.security.jwt;
 
-import com.agao.entity.user.User;
+import com.agao.user.entity.User;
 import com.agao.security.userdetails.AuthUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
