@@ -56,12 +56,10 @@ public class WebSecurityConfig {
 //                .anyRequest().hasAuthority(AclEntryPerm.AUTHED.name())
                 .anyRequest().authenticated()
                 .and()
-                .oauth2ResourceServer(oauth2 -> {
-                    oauth2.authenticationEntryPoint(new LoginExpiredAuthenticationEntryPoint())
-                            .jwt()
-                            .decoder(jwtCodec)
-                            .jwtAuthenticationConverter(jwtAuthenticationConverter());
-                })
+                .oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(new LoginExpiredAuthenticationEntryPoint())
+                        .jwt()
+                        .decoder(jwtCodec)
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 // 表单登录
                 .formLogin()
                 // 登录路由
@@ -85,6 +83,7 @@ public class WebSecurityConfig {
                 .and()
 //                 token 过期提醒过滤器
                 .addFilterAfter(new TokenExpireRemindFilter(), BearerTokenAuthenticationFilter.class)
+//                  token续期
 //                .addFilterAfter()
         ;
         return http.build();

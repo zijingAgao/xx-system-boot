@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Agao
  * @date 2024/2/8 22:36
  */
-@Api(tags = "登录接口", value = "登录")
+@Api(tags = "登录认证接口")
 @RestController
 @RequestMapping("/api")
 public class LoginController {

@@ -9,9 +9,9 @@ public class LoginConstants {
     /**
      * token过期提醒header
      */
-    public static final String TOKEN_EXPIRE_REMIND_HEADER = "XX-SYSTEM-TOKEN-EXPIRE-AT";
+    public static final String TOKEN_EXPIRE_REMIND_HEADER = "xx-system-token-expire-at";
 
-    public static final String AUTH_ERROR_RESPONSE_HEADER = "XX-SYSTEM-Authentication-Error";
+    public static final String AUTH_ERROR_RESPONSE_HEADER = "xx-system-authentication-error";
 
 
     /**

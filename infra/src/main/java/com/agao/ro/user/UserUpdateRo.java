@@ -1,5 +1,6 @@
 package com.agao.ro.user;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -12,25 +13,27 @@ import java.util.List;
 @Data
 public class UserUpdateRo {
 
+    @ApiModelProperty(value = "用户id")
     private String id;
-    /**
-     * 账号
-     */
+
+    @ApiModelProperty(value = "用户名/邮箱")
     private String username;
-    /**
-     * 手机号
-     */
+
+    @ApiModelProperty(value = "手机号")
     private String mobile;
-    /**
-     * 密码
-     */
+
+    @ApiModelProperty(value = "是否自动生成密码")
+    private boolean autoPwd = true;
+
+    @ApiModelProperty(value = "是否重置密码")
+    private boolean resetPwd = false;
+
+    @ApiModelProperty(value = "密码")
     private String password;
-    /**
-     * 角色 一个账号可以对应多个角色
-     */
+
+    @ApiModelProperty(value = "角色")
     private List<String> roles = new ArrayList<>();
-    /**
-     * 是否启用
-     */
+
+    @ApiModelProperty(value = "是否启用")
     private boolean enabled = true;
 }
