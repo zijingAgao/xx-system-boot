@@ -1,5 +1,6 @@
 package com.agao.ro.user;
 
+import com.agao.security.enums.UserRole;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -32,7 +33,7 @@ public class UserUpdateRo {
     private String password;
 
     @ApiModelProperty(value = "角色")
-    private List<String> roles = new ArrayList<>();
+    private List<UserRole> roles = new ArrayList<>();
 
     @ApiModelProperty(value = "是否启用")
     private boolean enabled = true;
