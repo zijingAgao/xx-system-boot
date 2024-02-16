@@ -33,6 +33,7 @@ public class UserService {
     }
 
     public void add(UserUpdateRo ro) {
+        validateUser(ro,true);
         User entity = new User();
         BeanUtils.copyProperties(ro, entity);
         String encodePwd = PasswordService.passwordEncoder.encode(ro.getPassword());
@@ -41,6 +42,7 @@ public class UserService {
     }
 
     public void update(UserUpdateRo ro) {
+        validateUser(ro,false);
         String id = ro.getId();
         User entity = userRepository.findById(id).orElse(null);
         if (entity == null) {
@@ -62,14 +64,15 @@ public class UserService {
         });
     }
 
-    void validateUser(UserUpdateRo ro) {
+    void validateUser(UserUpdateRo ro, boolean add) {
         String username = ro.getUsername();
-
-        if (userRepository.countByUsername(username) > 0) {
-            throw new UserException(UserExceptionCode.USER_EXIST);
+        if (add) {
+            if (userRepository.countByUsername(username) > 0) {
+                throw new UserException(UserExceptionCode.USER_EXIST);
+            }
         }
-        // 校验密码强度
 
+        // 校验密码强度
 
 
     }

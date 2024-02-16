@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = CommonException.class)
     public CommonResp<?> commonExceptionHandler(CommonException e) {
-        return CommonResp.error(e.getMessage());
+        return CommonResp.error(e.getCode(), e.getMsg());
     }
 
     @ResponseStatus(HttpStatus.OK)

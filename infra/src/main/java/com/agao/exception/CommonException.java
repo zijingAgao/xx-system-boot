@@ -1,11 +1,14 @@
 package com.agao.exception;
 
+import lombok.Getter;
+
 /**
  * 公共异常类
  *
  * @author Agao
  * @date 2024/2/10 14:37
  */
+@Getter
 public class CommonException extends RuntimeException {
 
     private Integer code;
