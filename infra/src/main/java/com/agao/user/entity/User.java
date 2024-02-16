@@ -2,6 +2,7 @@ package com.agao.user.entity;
 
 import com.agao.common.BaseEntity;
 import com.agao.security.userdetails.AuthUser;
+import com.agao.user.enums.PasswordStrength;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
@@ -45,7 +46,17 @@ public class User extends BaseEntity {
      * 是否启用
      */
     private boolean enabled = true;
+    /**
+     * 密码强度
+     */
+    private PasswordStrength passwordStrength;
 
+    /**
+     * 转换实体
+     *
+     * @param authUser
+     * @return
+     */
     public static User convertForm(AuthUser authUser) {
         User user = new User();
         BeanUtils.copyProperties(authUser, user);

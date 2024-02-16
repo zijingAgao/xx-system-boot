@@ -9,4 +9,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface UserRepository extends MongoRepository<User, String>, UserRepositoryCustom {
     User findFirstByUsername(String username);
+
+    Integer countByUsername(String username);
 }

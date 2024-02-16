@@ -17,6 +17,7 @@ import java.util.Collections;
  */
 public class CustomGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
     private String authoritiesClaimName = "scope";
+
     @Override
     public Collection<GrantedAuthority> convert(Jwt jwt) {
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -39,9 +40,8 @@ public class CustomGrantedAuthoritiesConverter implements Converter<Jwt, Collect
         if (authorities instanceof String) {
             if (StringUtils.hasText((String) authorities)) {
                 return Arrays.asList(((String) authorities).split(" "));
-            } else {
-                return Collections.emptyList();
             }
+            return Collections.emptyList();
         } else if (authorities instanceof Collection) {
             return (Collection<String>) authorities;
         }

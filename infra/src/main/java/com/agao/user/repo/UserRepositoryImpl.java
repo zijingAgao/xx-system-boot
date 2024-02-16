@@ -1,8 +1,9 @@
 package com.agao.user.repo;
 
 import com.agao.user.entity.User;
-import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserQueryRo;
 import com.agao.utils.MongoPageHelper;
+import org.hibernate.criterion.CriteriaQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,19 +26,19 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private MongoPageHelper mongoPageHelper;
 
     @Override
-    public List<User> findByCondition(UserQueryAbstract ro) {
+    public List<User> findByCondition(UserQueryRo ro) {
         Criteria criteria = generateCriteria(ro);
         return mongoTemplate.find(Query.query(criteria), User.class);
     }
 
     @Override
-    public Page<User> pageByCondition(UserQueryAbstract ro) {
+    public Page<User> pageByCondition(UserQueryRo ro) {
         Pageable pageable = ro.obtainPageable();
         Criteria criteria = generateCriteria(ro);
         return mongoPageHelper.page(criteria, pageable, User.class);
     }
 
-    private Criteria generateCriteria(UserQueryAbstract ro) {
+    private Criteria generateCriteria(UserQueryRo ro) {
         Criteria criteria = new Criteria();
         if (ro == null) {
             return criteria;
@@ -45,8 +46,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         String username = ro.getUsername();
 
         if (StringUtils.hasText(username)) {
-            Pattern pattern = Pattern.compile(username, Pattern.CASE_INSENSITIVE);
-            criteria.regex(pattern);
+            Pattern pattern = Pattern.compile(Pattern.quote(username), Pattern.CASE_INSENSITIVE);
+            criteria.and("username").regex(pattern);
         }
 
         // todo: 填充user参数

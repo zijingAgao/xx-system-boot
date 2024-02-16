@@ -1,7 +1,9 @@
 package com.agao.config;
 
+import com.agao.security.filter.RefreshTokenFilter;
 import com.agao.security.filter.TokenExpireRemindFilter;
 import com.agao.security.handler.*;
+import com.agao.security.jwt.AuthTokenService;
 import com.agao.security.jwt.CustomGrantedAuthoritiesConverter;
 import com.agao.security.jwt.JwtCodec;
 import com.agao.security.jwt.LoginExpiredAuthenticationEntryPoint;
@@ -44,6 +46,8 @@ public class WebSecurityConfig {
     private UserDetailsServiceImpl userDetailsServiceImpl;
     @Autowired
     private JwtCodec jwtCodec;
+    @Autowired
+    private AuthTokenService authTokenService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -84,7 +88,7 @@ public class WebSecurityConfig {
 //                 token 过期提醒过滤器
                 .addFilterAfter(new TokenExpireRemindFilter(), BearerTokenAuthenticationFilter.class)
 //                  token续期
-//                .addFilterAfter()
+                .addFilterAfter(new RefreshTokenFilter(authTokenService), TokenExpireRemindFilter.class)
         ;
         return http.build();
     }

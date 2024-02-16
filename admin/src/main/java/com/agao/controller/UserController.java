@@ -2,7 +2,7 @@ package com.agao.controller;
 
 import com.agao.common.CommonResp;
 import com.agao.user.entity.User;
-import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserQueryRo;
 import com.agao.user.ro.UserUpdateRo;
 import com.agao.user.service.UserService;
 import com.agao.vo.UserVo;
@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class UserController {
 
     @ApiOperation(value = "分页查询用户")
     @GetMapping("/api/user")
-    public CommonResp<List<UserVo>> page(UserQueryAbstract ro) {
+    public CommonResp<List<UserVo>> page(UserQueryRo ro) {
         Page<User> page = userService.page(ro);
         long total = page.getTotalElements();
         if (total == 0) {
@@ -56,13 +57,13 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping("/api/user")
-    public void save(@RequestBody UserUpdateRo ro) {
+    public void save(@RequestBody @Validated UserUpdateRo ro) {
         userService.add(ro);
     }
 
     @ApiOperation(value = "修改用户")
     @PutMapping("/api/user")
-    public void update(@RequestBody UserUpdateRo ro) {
+    public void update(@RequestBody @Validated UserUpdateRo ro) {
         userService.update(ro);
     }
 

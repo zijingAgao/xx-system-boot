@@ -1,7 +1,7 @@
 package com.agao.user.repo;
 
 import com.agao.user.entity.User;
-import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserQueryRo;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface UserRepositoryCustom {
      * @param ro
      * @return
      */
-    List<User> findByCondition(UserQueryAbstract ro);
+    List<User> findByCondition(UserQueryRo ro);
 
     /**
      * ro 条件查询分页
@@ -26,5 +26,5 @@ public interface UserRepositoryCustom {
      * @param ro
      * @return
      */
-    Page<User> pageByCondition(UserQueryAbstract ro);
+    Page<User> pageByCondition(UserQueryRo ro);
 }

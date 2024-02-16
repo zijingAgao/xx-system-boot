@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserQueryAbstract extends AbstractPage {
+public class UserQueryRo extends AbstractPage {
     @ApiModelProperty(value = "邮箱")
     private String username;
 }

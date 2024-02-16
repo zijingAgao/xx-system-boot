@@ -4,7 +4,7 @@ import com.agao.user.entity.User;
 import com.agao.exception.user.UserException;
 import com.agao.exception.user.UserExceptionCode;
 import com.agao.user.repo.UserRepository;
-import com.agao.user.ro.UserQueryAbstract;
+import com.agao.user.ro.UserQueryRo;
 import com.agao.user.ro.UserUpdateRo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,18 +21,22 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordService passwordService;
 
     public User findOne(String id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public Page<User> page(UserQueryAbstract ro) {
+    public Page<User> page(UserQueryRo ro) {
         return userRepository.pageByCondition(ro);
     }
 
     public void add(UserUpdateRo ro) {
         User entity = new User();
         BeanUtils.copyProperties(ro, entity);
+        String encodePwd = PasswordService.passwordEncoder.encode(ro.getPassword());
+        entity.setPassword(encodePwd);
         userRepository.save(entity);
     }
 
@@ -56,5 +60,17 @@ public class UserService {
             entity.setEnabled(b);
             userRepository.save(entity);
         });
+    }
+
+    void validateUser(UserUpdateRo ro) {
+        String username = ro.getUsername();
+
+        if (userRepository.countByUsername(username) > 0) {
+            throw new UserException(UserExceptionCode.USER_EXIST);
+        }
+        // 校验密码强度
+
+
+
     }
 }

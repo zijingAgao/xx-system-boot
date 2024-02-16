@@ -1,9 +1,12 @@
 package com.agao.user.ro;
 
+import com.agao.common.RegexConstants;
 import com.agao.security.enums.UserRole;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +21,11 @@ public class UserUpdateRo {
     private String id;
 
     @ApiModelProperty(value = "用户名/邮箱")
+    @Email
     private String username;
 
     @ApiModelProperty(value = "手机号")
+    @Pattern(regexp = RegexConstants.PHONE, message = "手机号格式有误")
     private String mobile;
 
     @ApiModelProperty(value = "是否自动生成密码")

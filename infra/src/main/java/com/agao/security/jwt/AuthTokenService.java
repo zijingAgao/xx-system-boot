@@ -41,6 +41,12 @@ public class AuthTokenService {
         return new AuthToken(accessToken, refreshToken, getAccessTokenExpireSeconds(), authUser);
     }
 
+    public AuthToken refresh(String refreshToken) {
+
+        return null;
+
+    }
+
     /**
      * 获取刷新token过期时间
      *

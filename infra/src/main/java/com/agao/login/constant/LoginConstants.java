@@ -12,6 +12,14 @@ public class LoginConstants {
     public static final String TOKEN_EXPIRE_REMIND_HEADER = "xx-system-token-expire-at";
 
     public static final String AUTH_ERROR_RESPONSE_HEADER = "xx-system-authentication-error";
+    /**
+     * 请求刷新token的header
+     */
+    public static final String REFRESH_TOKEN_HEADER_REQ = "xx-system-refresh-token-req";
+    /**
+     * 响应刷新token的header
+     */
+    public static final String REFRESH_TOKEN_HEADER_RESP = "xx-system-refresh-token-resp";
 
 
     /**
