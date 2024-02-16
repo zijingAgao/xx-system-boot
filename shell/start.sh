@@ -41,51 +41,6 @@ if test -e $APP_NAME;then
 
 
   nohup java -jar $APP_NAME $APP_YML  > log.log 2>&1 &
-  echo "jar启动中，请稍后......"
-#  sleep 10s
+  echo "xx-system jar 执行启动--"
 
-#  #通过检测日志来判断
-#  while [ -f $LOG_FILE ]
-#  do
-#      success=`grep "Started CrmebAdminApplication in " $LOG_FILE`
-#      if [[ "$success" != "" ]]
-#      then
-##          echo "xx-system start ........."
-#          break
-#      else
-##          echo "xx-system Running ......."
-#          sleep 1s
-#      fi
-#
-##      echo "开始检测启动失败标记"
-#      fail=`grep "Fail" $LOG_FILE`
-#      if [[ "$fail" != "" ]]
-#      then
-#          echo "项目启动失败"
-#          tail -f $LOG_FILE
-#          break
-#      else
-##          echo "xx-system Running ......."
-#          sleep 1s
-#      fi
-#
-#  done
-#  echo "xx-system Started Success"
-#
-#endTime=`date +'%Y-%m-%d %H:%M:%S'`
-#startSecond=$(date --date="$startTime" +%s);
-#endSecond=$(date --date="$endTime" +%s);
-#
-#total=$((endSecond-startSecond))
-## shellcheck disable=SC2027
-#echo "本次运行时间： "$total"s"
-## shellcheck disable=SC2086
-#echo "当前时间："$endTime
-#
-#
-#
-#else
-#  echo '$APP_NAME 文件不存在,请检查。'
-#fi
-
-#在 $APP_NAME 同级目录下运行  ./start.sh 命令即可启动项目。
+fi

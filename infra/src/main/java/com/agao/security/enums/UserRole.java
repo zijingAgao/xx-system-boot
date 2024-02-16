@@ -12,7 +12,9 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public enum UserRole {
-    ADMIN("ADMIN", AclEntryPerm.getAllPerms());
+    ADMIN("ADMIN", AclEntryPerm.getAllPerms()),
+    AUDIT_ADMIN("AUDIT_ADMIN", AclEntryPerm.getAllPerms())
+    ;
 
     private final String value;
     private final List<AclEntryPerm> aclPerms;
