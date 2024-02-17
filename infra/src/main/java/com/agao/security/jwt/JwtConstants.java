@@ -8,7 +8,7 @@ public class JwtConstants {
     /**
      * token加密key盐值
      */
-    public static final String LOGIN_TOKEN_CODEC_SECRET_KEY = "agao";
+    public static final String LOGIN_TOKEN_CODEC_SECRET_KEY = "XxSystem";
 
     /**
      * 会话有效期--即token过期时间 单位：分钟

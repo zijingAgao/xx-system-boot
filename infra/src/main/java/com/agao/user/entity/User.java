@@ -1,6 +1,7 @@
 package com.agao.user.entity;
 
 import com.agao.common.BaseEntity;
+import com.agao.security.enums.UserRole;
 import com.agao.security.userdetails.AuthUser;
 import com.agao.user.enums.PasswordStrength;
 import lombok.Data;
@@ -41,7 +42,7 @@ public class User extends BaseEntity {
     /**
      * 角色 一个账号可以对应多个角色
      */
-    private List<String> roles = new ArrayList<>();
+    private List<UserRole> roles = new ArrayList<>();
     /**
      * 是否启用
      */

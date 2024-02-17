@@ -1,11 +1,16 @@
 package com.agao.security.jwt;
 
-import com.agao.user.entity.User;
+import com.agao.exception.user.UserException;
+import com.agao.exception.user.UserExceptionCode;
 import com.agao.security.userdetails.AuthUser;
+import com.agao.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.util.UUID;
@@ -38,13 +43,32 @@ public class AuthTokenService {
         String accessToken = jwtCodec.encodeForAccessToken(authUser, getAccessTokenExpireSeconds(), TimeUnit.MINUTES);
         // 生成刷新token
         String refreshToken = jwtCodec.encodeForRefreshToken(authUser, getRefreshTokenExpireSeconds(rememberMe), TimeUnit.MINUTES);
+
         return new AuthToken(accessToken, refreshToken, getAccessTokenExpireSeconds(), authUser);
     }
 
     public AuthToken refresh(String refreshToken) {
+        if (!StringUtils.hasText(refreshToken)){
+            throw new UserException(UserExceptionCode.REFRESH_TOKEN_EMPTY);
+        }
+        AuthUser authUser;
+        try {
+            Jwt jwt = jwtCodec.decode(refreshToken);
+            authUser = AuthUser.from(jwt);
+        } catch (JwtException e) {
+            throw new UserException(UserExceptionCode.INVALID_REFRESH_TOKEN);
+        }
+        // 生成认证token
+        String newAccessToken = jwtCodec.encodeForAccessToken(authUser, getAccessTokenExpireSeconds(), TimeUnit.MINUTES);
+        // 生成刷新token
+        String newRefreshToken = jwtCodec.encodeForRefreshToken(authUser, getRefreshTokenExpireSeconds(authUser.isRememberMe()), TimeUnit.MINUTES);
 
-        return null;
-
+        AuthToken authToken = new AuthToken();
+        authToken.setAccessToken(newAccessToken);
+        authToken.setRefreshToken(newRefreshToken);
+        authToken.setAccessTokenExpire(getAccessTokenExpireSeconds());
+        authToken.setAuthUser(authUser);
+        return authToken;
     }
 
     /**

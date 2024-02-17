@@ -20,12 +20,12 @@ public class AuthorityService {
 
     private final RoleVoter roleVoter = new RoleVoter();
     public Set<GrantedAuthority> getAuthorities(User user) {
-        List<String> roles = user.getRoles();
+        List<UserRole> roles = user.getRoles();
 
         // 所有的权限点
         List<AclEntryPerm> perms = new ArrayList<>();
         roles.stream()
-                .map(UserRole::fromValue)
+//                .map(UserRole::fromValue)
                 .filter(Objects::nonNull)
                 .forEach(role-> role.getAclPerms().forEach(acl -> perms.addAll(acl.getCurrentPerms())));
 

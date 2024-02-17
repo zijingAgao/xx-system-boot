@@ -4,6 +4,8 @@ import com.agao.login.constant.LoginConstants;
 import com.agao.security.jwt.AuthToken;
 import com.agao.security.jwt.AuthTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,8 +38,12 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
             return;
         }
         // 刷新token
+        AuthToken authToken = authTokenService.refresh(refreshToken);
+        BearerTokenAuthenticationToken authenticationToken = new BearerTokenAuthenticationToken(authToken.getAccessToken());
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthToken authToken;
+        response.setHeader(LoginConstants.REFRESH_TOKEN_HEADER_RESP, objectMapper.writeValueAsString(authToken));
+        filterChain.doFilter(request,response);
     }
 }

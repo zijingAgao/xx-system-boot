@@ -21,6 +21,8 @@ public enum UserExceptionCode implements IExceptionEnum {
     USER_DISABLE(1008, "用户被锁定"),
     EMPTY_VALIDATE_CODE(1009, "验证码为空"),
     INVALID_VALIDATE_CODE(1010, "验证码错误"),
+    REFRESH_TOKEN_EMPTY(1011,"刷新token为空"),
+    INVALID_REFRESH_TOKEN(1012,"无效的刷新token"),
     ;
 
     private Integer code;
