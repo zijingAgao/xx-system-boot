@@ -5,12 +5,14 @@ import com.agao.user.entity.User;
 import com.agao.user.ro.UserQueryRo;
 import com.agao.user.ro.UserUpdateRo;
 import com.agao.user.service.UserService;
+import com.agao.utils.AuthContextResolver;
 import com.agao.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,6 +85,15 @@ public class UserController {
     @PutMapping("/api/user/enable/{id}")
     public void enable(@PathVariable String id) {
         userService.switchEnable(id, true);
+    }
+
+    @ApiOperation(value = "获取当前登录的用户信息")
+    @GetMapping("/api/user/current")
+    public CommonResp<UserVo> current() {
+        User user = AuthContextResolver.getCurrentUserException();
+        UserVo vo = new UserVo();
+        BeanUtils.copyProperties(user, vo);
+        return CommonResp.success(vo);
     }
 
 }

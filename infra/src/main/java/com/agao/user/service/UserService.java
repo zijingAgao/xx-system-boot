@@ -33,24 +33,53 @@ public class UserService {
     }
 
     public void add(UserUpdateRo ro) {
-        validateUser(ro,true);
+        validateUser(ro, true);
+        boolean autoPwd = ro.isAutoPwd();
+        String password = ro.getPassword();
+
         User entity = new User();
         BeanUtils.copyProperties(ro, entity);
-        String encodePwd = PasswordService.passwordEncoder.encode(ro.getPassword());
-        entity.setPassword(encodePwd);
+
+        String ciphertextPwd;
+        if (autoPwd) {
+            ciphertextPwd = passwordService.generateEncodeRandomPwd();
+        } else {
+            ciphertextPwd = PasswordService.PASSWORD_ENCODER.encode(password);
+        }
+        entity.setPassword(ciphertextPwd);
         userRepository.save(entity);
     }
 
     public void update(UserUpdateRo ro) {
-        validateUser(ro,false);
+        validateUser(ro, false);
         String id = ro.getId();
+        boolean resetPwd = ro.isResetPwd();
+        boolean autoPwd = ro.isAutoPwd();
         User entity = userRepository.findById(id).orElse(null);
         if (entity == null) {
-            log.warn("update user fail, id is {}", id);
             throw new UserException(UserExceptionCode.USER_NOT_EXIST);
         }
+        // 更新变更信息
         BeanUtils.copyProperties(ro, entity);
+
+        // 重置密码
+        if (resetPwd) {
+            String ciphertextPwd;
+            if (autoPwd) {
+                ciphertextPwd = passwordService.generateEncodeRandomPwd();
+            } else {
+                ciphertextPwd = PasswordService.PASSWORD_ENCODER.encode(ro.getPassword());
+            }
+            entity.setPassword(ciphertextPwd);
+        }
+
         userRepository.save(entity);
+
+        // todo: 保存用户后，发送邮件
+        if (resetPwd && autoPwd) {
+            // 发送邮件
+            log.info("模拟需要发送邮件");
+        }
     }
 
     public void delete(String id) {
@@ -66,13 +95,28 @@ public class UserService {
 
     void validateUser(UserUpdateRo ro, boolean add) {
         String username = ro.getUsername();
+        boolean autoPwd = ro.isAutoPwd();
+        boolean resetPwd = ro.isResetPwd();
+        // ----------------------------新增user校验-------------------------------------
         if (add) {
             if (userRepository.countByUsername(username) > 0) {
                 throw new UserException(UserExceptionCode.USER_EXIST);
             }
+            if (!autoPwd) {
+                // 校验密码强度
+                passwordService.validatePwdStrength(ro.getPassword());
+            }
+            return;
         }
 
-        // 校验密码强度
+        // ----------------------------编辑user校验-------------------------------------
+        if (resetPwd) {
+            // 校验密码强度
+            if (!autoPwd) {
+                // 校验密码强度
+                passwordService.validatePwdStrength(ro.getPassword());
+            }
+        }
 
 
     }

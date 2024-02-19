@@ -23,6 +23,7 @@ public enum UserExceptionCode implements IExceptionEnum {
     INVALID_VALIDATE_CODE(1010, "验证码错误"),
     REFRESH_TOKEN_EMPTY(1011,"刷新token为空"),
     INVALID_REFRESH_TOKEN(1012,"无效的刷新token"),
+    USER_PASSWORD_STRENGTH_NOT_MATCH(1013, "密码强度不符合要求"),
     ;
 
     private Integer code;

@@ -1,5 +1,6 @@
 package com.agao.init;
 
+import com.agao.security.enums.UserRole;
 import com.agao.user.entity.User;
 import com.agao.user.repo.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class XxSystemInit implements ApplicationRunner {
             User user = new User();
             user.setUsername("admin@gmail.com");
             user.setMobile("13800000000");
-            user.setRoles(Lists.newArrayList("ADMIN"));
+            user.setRoles(Lists.newArrayList(UserRole.ADMIN));
             user.setEnabled(true);
             user.setPassword(passwordEncoder.encode("@ppEx2024"));
             userRepository.save(user);

@@ -23,7 +23,8 @@ public class UserUpdateRo {
     @ApiModelProperty(value = "用户名/邮箱")
     @Email
     private String username;
-
+    @ApiModelProperty(value = "昵称")
+    private String nickName;
     @ApiModelProperty(value = "手机号")
     @Pattern(regexp = RegexConstants.PHONE, message = "手机号格式有误")
     private String mobile;

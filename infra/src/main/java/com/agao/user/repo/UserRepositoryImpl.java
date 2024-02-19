@@ -1,5 +1,6 @@
 package com.agao.user.repo;
 
+import com.agao.security.enums.UserRole;
 import com.agao.user.entity.User;
 import com.agao.user.ro.UserQueryRo;
 import com.agao.utils.MongoPageHelper;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -44,10 +46,28 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             return criteria;
         }
         String username = ro.getUsername();
+        String nickName = ro.getNickName();
+        String mobile = ro.getMobile();
+        List<UserRole> roles = ro.getRoles();
+        Boolean enabled = ro.getEnabled();
 
         if (StringUtils.hasText(username)) {
             Pattern pattern = Pattern.compile(Pattern.quote(username), Pattern.CASE_INSENSITIVE);
             criteria.and("username").regex(pattern);
+        }
+        if (StringUtils.hasText(nickName)) {
+            Pattern pattern = Pattern.compile(Pattern.quote(nickName), Pattern.CASE_INSENSITIVE);
+            criteria.and("nickName").regex(pattern);
+        }
+        if (StringUtils.hasText(mobile)) {
+            Pattern pattern = Pattern.compile(Pattern.quote(mobile), Pattern.CASE_INSENSITIVE);
+            criteria.and("mobile").regex(pattern);
+        }
+        if (!CollectionUtils.isEmpty(roles)) {
+            criteria.and("roles").in(roles);
+        }
+        if (enabled != null) {
+            criteria.and("enabled").is(enabled);
         }
 
         // todo: 填充user参数

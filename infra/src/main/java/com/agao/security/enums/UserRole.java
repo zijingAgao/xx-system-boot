@@ -1,5 +1,6 @@
 package com.agao.security.enums;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public enum UserRole {
     ADMIN("ADMIN", AclEntryPerm.getAllPerms()),
-    AUDIT_ADMIN("AUDIT_ADMIN", AclEntryPerm.getAllPerms())
+    AUDIT_ADMIN("AUDIT_ADMIN", AclEntryPerm.getAllPerms()),
+
+    USER("USER", Lists.newArrayList())
     ;
 
     private final String value;
