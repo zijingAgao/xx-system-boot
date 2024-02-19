@@ -32,6 +32,9 @@ public class SettingCache {
                 @Override
                 public Optional<Setting> load(String key) throws Exception {
                     Setting setting = settingRepository.findByKey(key);
+                    if (setting == null) {
+                        return Optional.empty();
+                    }
                     return Optional.of(setting);
                 }
             });
@@ -46,7 +49,7 @@ public class SettingCache {
         try {
             return SettingLoadingCache.get(key);
         } catch (ExecutionException e) {
-            log.warn("getSetting error", e);
+            log.error("getSetting error", e);
             return Optional.empty();
         }
     }

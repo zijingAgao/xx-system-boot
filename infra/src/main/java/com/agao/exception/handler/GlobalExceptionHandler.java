@@ -19,12 +19,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = CommonException.class)
     public CommonResp<?> commonExceptionHandler(CommonException e) {
+        log.error("CommonException error", e);
         return CommonResp.error(e.getCode(), e.getMsg());
     }
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(value = Exception.class)
     public CommonResp<?> ExceptionHandler(Exception e) {
+        log.error("Exception error", e);
         return CommonResp.error(e.getMessage());
     }
 

@@ -9,9 +9,13 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Agao
@@ -61,6 +65,18 @@ public class User extends BaseEntity {
     public static User convertForm(AuthUser authUser) {
         User user = new User();
         BeanUtils.copyProperties(authUser, user);
+        return user;
+    }
+
+    public static User convertForm(Jwt jwt) {
+        User user = new User();
+        user.setId(jwt.getClaimAsString("id"));
+        user.setUsername(jwt.getClaimAsString("username"));
+        user.setNickName(jwt.getClaimAsString("nickName"));
+        user.setMobile(jwt.getClaimAsString("mobile"));
+        List<String> roleList = jwt.getClaimAsStringList("roles");
+        user.setRoles(CollectionUtils.isEmpty(roleList) ? new ArrayList<>() : roleList.stream().map(UserRole::valueOf).collect(toList()));
+        user.setEnabled(jwt.getClaimAsBoolean("enabled"));
         return user;
     }
 }

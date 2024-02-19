@@ -1,7 +1,6 @@
 package com.agao.security.jwt;
 
 import com.agao.security.userdetails.AuthUser;
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -10,13 +9,14 @@ import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +50,8 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
                 .issuer("web")
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
+                .claim("nickname", user.getNickname())
+                .claim("mobile", user.getMobile())
                 .claim("roles", user.getRoles())
                 .claim("sessionId", user.getSessionId())
                 .claim("enabled", user.isEnabled())
@@ -79,6 +81,8 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
                 .issuer("web")
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
+                .claim("nickname", user.getNickname())
+                .claim("mobile", user.getMobile())
                 .claim("sessionId", user.getSessionId())
                 .claim("enabled", user.isEnabled())
                 .claim("rememberMe", user.isRememberMe())

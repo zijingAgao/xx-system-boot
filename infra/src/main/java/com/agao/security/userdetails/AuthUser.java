@@ -28,6 +28,8 @@ public class AuthUser implements UserDetails {
     private String id;
     private String username;
     private String password;
+    private String nickname;
+    private String mobile;
     private List<UserRole> roles;
     private Set<GrantedAuthority> authorities;
     private boolean enabled;
@@ -35,8 +37,11 @@ public class AuthUser implements UserDetails {
     private boolean rememberMe;
 
     public AuthUser(User user, Set<GrantedAuthority> grantedAuthorities) {
+        this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
+        this.nickname = user.getNickName();
+        this.mobile = user.getMobile();
         this.roles = user.getRoles();
         this.authorities = grantedAuthorities;
         this.enabled = user.isEnabled();
@@ -70,6 +75,8 @@ public class AuthUser implements UserDetails {
         AuthUser authUser = new AuthUser();
         authUser.id = jwt.getClaimAsString("id");
         authUser.username = jwt.getClaimAsString("username");
+        authUser.nickname = jwt.getClaimAsString("nickname");
+        authUser.mobile = jwt.getClaimAsString("mobile");
         List<String> roleList = jwt.getClaimAsStringList("roles");
         authUser.roles = (CollectionUtils.isEmpty(roleList) ? new ArrayList<>() : roleList.stream().map(UserRole::valueOf).collect(toList()));
         Boolean rememberMeObj = jwt.getClaimAsBoolean("rememberMe");

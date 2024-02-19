@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,32 +58,37 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping("/api/user")
-    public void save(@RequestBody @Validated UserUpdateRo ro) {
+    public CommonResp<?> save(@RequestBody @Validated UserUpdateRo ro) {
         userService.add(ro);
+        return CommonResp.success();
     }
 
     @ApiOperation(value = "修改用户")
     @PutMapping("/api/user")
-    public void update(@RequestBody @Validated UserUpdateRo ro) {
+    public CommonResp<?> update(@RequestBody @Validated UserUpdateRo ro) {
         userService.update(ro);
+        return CommonResp.success();
     }
 
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/api/user/{id}")
-    public void delete(@PathVariable String id) {
+    public CommonResp<?> delete(@PathVariable String id) {
         userService.delete(id);
+        return CommonResp.success();
     }
 
     @ApiOperation(value = "禁用用户")
     @PutMapping("/api/user/disable/{id}")
-    public void disable(@PathVariable String id) {
+    public CommonResp<?> disable(@PathVariable String id) {
         userService.switchEnable(id, false);
+        return CommonResp.success();
     }
 
     @ApiOperation(value = "启用用户")
     @PutMapping("/api/user/enable/{id}")
-    public void enable(@PathVariable String id) {
+    public CommonResp<?> enable(@PathVariable String id) {
         userService.switchEnable(id, true);
+        return CommonResp.success();
     }
 
     @ApiOperation(value = "获取当前登录的用户信息")

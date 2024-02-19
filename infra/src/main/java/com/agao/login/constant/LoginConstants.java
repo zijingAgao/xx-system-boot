@@ -21,6 +21,11 @@ public class LoginConstants {
      */
     public static final String REFRESH_TOKEN_HEADER_RESP = "xx-system-refresh-token-resp";
 
+    /**
+     * 自动下线的header
+     */
+    public static final String AUTO_LOGOUT_HEADER_REQ = "xx-system-auto-logout-req";
+
 
     /**
      * 记住我的参数

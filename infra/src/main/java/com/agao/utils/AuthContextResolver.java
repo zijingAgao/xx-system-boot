@@ -1,17 +1,11 @@
 package com.agao.utils;
 
 import com.agao.exception.user.UserException;
-import com.agao.security.enums.UserRole;
+import com.agao.security.userdetails.AuthUser;
 import com.agao.user.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * @author Agao
@@ -40,17 +34,13 @@ public class AuthContextResolver {
             return null;
         }
         Object principal = authentication.getPrincipal();
-        if (principal instanceof User) {
-            return (User) principal;
-        } else if (principal instanceof Jwt) {
+        if (principal instanceof AuthUser) {
+            AuthUser authUser = (AuthUser) principal;
+            return User.convertForm(authUser);
+        }
+        if (principal instanceof Jwt) {
             Jwt jwt = (Jwt) principal;
-            User user = new User();
-            user.setId(jwt.getClaimAsString("id"));
-            user.setUsername(jwt.getClaimAsString("username"));
-            List<String> roleList = jwt.getClaimAsStringList("roles");
-            user.setRoles(CollectionUtils.isEmpty(roleList) ? new ArrayList<>() : roleList.stream().map(UserRole::valueOf).collect(toList()));
-            user.setEnabled(jwt.getClaimAsBoolean("enabled"));
-            return user;
+            return User.convertForm(jwt);
         }
         return null;
     }
