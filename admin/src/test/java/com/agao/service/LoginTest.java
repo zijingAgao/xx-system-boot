@@ -26,7 +26,7 @@ public class LoginTest {
         user.setUsername("agao@gmail.com");
         user.setMobile("17399889988");
         user.setPassword(PWD_ENCODER.encode("123456"));
-        user.setRoles(Lists.newArrayList(UserRole.ADMIN.getValue()));
+        user.setRoles(Lists.newArrayList(UserRole.ADMIN));
         user.setEnabled(true);
 
         userRepository.save(user);
