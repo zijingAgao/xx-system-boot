@@ -3,6 +3,7 @@ package com.agao.security.jwt;
 import com.agao.security.userdetails.AuthUser;
 import com.agao.setting.SettingConst;
 import com.agao.setting.cache.SettingCache;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.BaseEncoding;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -12,14 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class JwtCodec implements InitializingBean, JwtDecoder {
+public class JwtCodec implements JwtDecoder, InitializingBean {
     public static final String PARTIAL_GRANTED_AUTHORITY_SUFFIX = ".SCOPE";
     private static final String SIGN_ALGO = "HmacSHA512";
     private static final Integer CLOCK_SKEW_SECONDS = 5;
@@ -40,6 +40,10 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
     private NimbusJwtDecoder decoder;
     @Autowired
     private SettingCache settingCache;
+    @Autowired
+    private BlackSessionTokenValidator blackSessionTokenValidator;
+    @Autowired
+    private TimeoutTokenValidator timeoutValidator;
 //    private NimbusJwtDecoder rowDecoder;
 
     /**
@@ -103,14 +107,14 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
         return null;
     }
 
-  private SecretKey getSecretKey() {
-    String secretKey = settingCache.getConfigValue(
-            SettingConst.CFG_KEY_AUTH_TOKEN_CODEC_SECRET,
-            SettingConst.CFG_DEFAULT_AUTH_TOKEN_CODEC_SECRET);
-    byte[] rawKey = BaseEncoding.base64().decode(secretKey);
-    byte[] newKey = Arrays.copyOf(rawKey, 256);
-    return new SecretKeySpec(newKey, SIGN_ALGO);
-  }
+    private SecretKey getSecretKey() {
+        String secretKey = settingCache.getConfigValue(
+                SettingConst.CFG_KEY_AUTH_TOKEN_CODEC_SECRET,
+                SettingConst.CFG_DEFAULT_AUTH_TOKEN_CODEC_SECRET);
+        byte[] rawKey = BaseEncoding.base64().decode(secretKey);
+        byte[] newKey = Arrays.copyOf(rawKey, 256);
+        return new SecretKeySpec(newKey, SIGN_ALGO);
+    }
 
     private String getSignedJWT(JWTClaimsSet claimsSet) throws JOSEException {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build(), claimsSet);
@@ -128,12 +132,11 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
         SecretKey key = getSecretKey();
         signer = new MACSigner(key);
         this.decoder = NimbusJwtDecoder.withSecretKey(key).build();
-//        this.decoder.setJwtValidator(
-//                new DelegatingOAuth2TokenValidator<>(
-//                        ImmutableList.of(
-//                                new JwtTimestampValidator(Duration.of(CLOCK_SKEW_SECONDS, ChronoUnit.SECONDS)),
-//                                timeoutValidator,
-//                                blacklistValidator)));
+        this.decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
+                ImmutableList.of(
+                        new JwtTimestampValidator(Duration.of(CLOCK_SKEW_SECONDS, ChronoUnit.SECONDS)),
+                        timeoutValidator,
+                        blackSessionTokenValidator)));
 
         this.decoder = NimbusJwtDecoder.withSecretKey(key).build();
         this.decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>());

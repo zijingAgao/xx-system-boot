@@ -22,8 +22,10 @@ public enum UserExceptionCode implements IExceptionEnum {
     EMPTY_VALIDATE_CODE(1009, "验证码为空"),
     INVALID_VALIDATE_CODE(1010, "验证码错误"),
     REFRESH_TOKEN_EMPTY(1011,"刷新token为空"),
-    INVALID_REFRESH_TOKEN(1012,"无效的刷新token"),
-    USER_PASSWORD_STRENGTH_NOT_MATCH(1013, "密码强度不符合要求"),
+    INVALID_TOKEN(1012,"无效的认证token"),
+    INVALID_REFRESH_TOKEN(1013,"无效的刷新token"),
+    USER_PASSWORD_STRENGTH_NOT_MATCH(1014, "密码强度不符合要求"),
+    SESSION_OUT(1015, "会话已过期"),
     ;
 
     private Integer code;

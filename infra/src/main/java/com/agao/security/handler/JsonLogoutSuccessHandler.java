@@ -2,6 +2,7 @@ package com.agao.security.handler;
 
 import com.agao.common.CommonResp;
 import com.agao.login.constant.LoginConstants;
+import com.agao.security.cache.BlackSessionCache;
 import com.agao.security.jwt.JwtCodec;
 import com.agao.security.userdetails.AuthUser;
 import com.agao.user.entity.User;
@@ -33,6 +34,8 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
     private UserRepository userRepository;
     @Autowired
     private JwtCodec jwtCodec;
+    @Autowired
+    private BlackSessionCache blackSessionCache;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request,
@@ -61,8 +64,8 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
                 log.warn("token:{} with no sessionId", token);
                 return;
             }
-            // todo: 踢除token 做一个黑名单缓存，增加token 黑名单校验 BlackSessionTokenValidator
-
+            // 丢入黑名单session
+            blackSessionCache.put(sessionId, user.getId());
         } catch (JwtException e) {
             log.warn("invalid token: {}", token);
         } catch (Exception e) {

@@ -2,14 +2,17 @@ package com.agao.security.handler;
 
 import com.agao.common.CommonResp;
 import com.agao.login.constant.LoginConstants;
-import com.agao.user.entity.User;
 import com.agao.security.LoginData;
+import com.agao.security.cache.LoginExpiredCache;
 import com.agao.security.jwt.AuthToken;
 import com.agao.security.jwt.AuthTokenService;
+import com.agao.security.jwt.JwtCodec;
 import com.agao.security.userdetails.AuthUser;
+import com.agao.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -33,6 +36,10 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
     private ObjectMapper objectMapper;
     @Autowired
     private AuthTokenService authTokenService;
+    @Autowired
+    private LoginExpiredCache loginExpiredCache;
+    @Autowired
+    private JwtCodec jwtCodec;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException, ServletException {
@@ -48,6 +55,9 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
         boolean rememberMe = rememberMe(req);
         // 生成token
         AuthToken authToken = authTokenService.authenticate(user, rememberMe);
+
+        Jwt jwt = jwtCodec.decode(authToken.getRefreshToken());
+        loginExpiredCache.logoutUserForLogin(user.getId(), jwt.getIssuedAt().toEpochMilli(), jwt.getExpiresAt().toEpochMilli());
 
         return LoginData.builder()
                 .email(user.getUsername())

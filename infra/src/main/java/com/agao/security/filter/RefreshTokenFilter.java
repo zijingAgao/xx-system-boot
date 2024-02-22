@@ -33,8 +33,8 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         // 获取刷新token
         String refreshToken = request.getHeader(LoginConstants.REFRESH_TOKEN_HEADER_REQ);
-        if (!StringUtils.hasText(refreshToken)){
-            filterChain.doFilter(request,response);
+        if (!StringUtils.hasText(refreshToken)) {
+            filterChain.doFilter(request, response);
             return;
         }
         // 刷新token
@@ -44,6 +44,6 @@ public class RefreshTokenFilter extends OncePerRequestFilter {
 
         ObjectMapper objectMapper = new ObjectMapper();
         response.setHeader(LoginConstants.REFRESH_TOKEN_HEADER_RESP, objectMapper.writeValueAsString(authToken));
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

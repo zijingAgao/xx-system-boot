@@ -27,7 +27,7 @@ public class SettingCache {
     @Autowired
     private SettingRepository settingRepository;
 
-    private final LoadingCache<String, Optional<Setting>> SettingLoadingCache = CacheBuilder.newBuilder().build(
+    private final LoadingCache<String, Optional<Setting>> settingLoadingCache = CacheBuilder.newBuilder().build(
             new CacheLoader<String, Optional<Setting>>() {
                 @Override
                 public Optional<Setting> load(String key) throws Exception {
@@ -47,7 +47,7 @@ public class SettingCache {
      */
     private Optional<Setting> get(String key) {
         try {
-            return SettingLoadingCache.get(key);
+            return settingLoadingCache.get(key);
         } catch (ExecutionException e) {
             log.error("getSetting error", e);
             return Optional.empty();
@@ -108,14 +108,14 @@ public class SettingCache {
      * @param key key
      */
     public void invalidateKey(String key) {
-        SettingLoadingCache.invalidate(key);
+        settingLoadingCache.invalidate(key);
     }
 
     /**
      * 失效setting缓存
      */
     public void invalidateAll() {
-        SettingLoadingCache.invalidateAll();
+        settingLoadingCache.invalidateAll();
     }
 
 
