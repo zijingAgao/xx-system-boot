@@ -3,10 +3,11 @@ package com.agao.security.jwt;
 import com.agao.exception.user.UserException;
 import com.agao.exception.user.UserExceptionCode;
 import com.agao.security.userdetails.AuthUser;
+import com.agao.setting.SettingConst;
+import com.agao.setting.cache.SettingCache;
 import com.agao.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
@@ -28,11 +29,8 @@ public class AuthTokenService {
 
     @Autowired
     private JwtCodec jwtCodec;
-    /**
-     * 记住我 过期时间 即刷新token的过期时间
-     */
-    @Value("${xx-system.remember-me.expire:7d}")
-    private Duration rememberMeExpire;
+    @Autowired
+    private SettingCache settingCache;
 
     public AuthToken authenticate(User user, boolean rememberMe) {
         if (user == null) {
@@ -48,7 +46,7 @@ public class AuthTokenService {
     }
 
     public AuthToken refresh(String refreshToken) {
-        if (!StringUtils.hasText(refreshToken)){
+        if (!StringUtils.hasText(refreshToken)) {
             throw new UserException(UserExceptionCode.REFRESH_TOKEN_EMPTY);
         }
         AuthUser authUser;
@@ -79,7 +77,8 @@ public class AuthTokenService {
      */
     private long getRefreshTokenExpireSeconds(boolean rememberMe) {
         if (rememberMe) {
-            return rememberMeExpire.getSeconds();
+            int expire = settingCache.getConfigValueAsInt(SettingConst.CFG_KEY_AUTH_REFRESH_TOKEN_EXPIRE, SettingConst.CFG_DEFAULT_AUTH_REFRESH_TOKEN_EXPIRE);
+            return Duration.ofDays(expire).getSeconds();
         }
         return getAccessTokenExpireSeconds();
     }
@@ -90,7 +89,6 @@ public class AuthTokenService {
      * @return
      */
     private long getAccessTokenExpireSeconds() {
-        return JwtConstants.LOGIN_SESSION_EXPIRE;
+        return settingCache.getConfigValueAsLong(SettingConst.CFG_KEY_AUTH_SESSION_EXPIRE, SettingConst.CFG_DEFAULT_SYSTEM_SESSION_EXPIRE);
     }
-
 }

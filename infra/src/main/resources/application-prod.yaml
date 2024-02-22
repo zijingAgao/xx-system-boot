@@ -27,6 +27,3 @@ spring:
 xx-system:
   swagger:
     enable: false
-  # 记住我得有效期
-  remember-me:
-    expire: 7d

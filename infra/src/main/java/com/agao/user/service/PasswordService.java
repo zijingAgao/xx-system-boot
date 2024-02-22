@@ -6,6 +6,7 @@ import com.agao.setting.SettingConst;
 import com.agao.setting.cache.SettingCache;
 import com.agao.user.enums.PasswordStrength;
 import com.agao.utils.StringRandom;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
  * @author Agao
  * @date 2024/2/15 21:39
  */
+@Slf4j
 @Service
 public class PasswordService {
     @Autowired
@@ -75,6 +77,7 @@ public class PasswordService {
         while (!PasswordStrength.HIGH.matches(pwd)) {
             pwd = StringRandom.randomAlphanumeric(12);
         }
+        log.info("auto pwd is :{}", pwd);
         return pwd;
     }
 }

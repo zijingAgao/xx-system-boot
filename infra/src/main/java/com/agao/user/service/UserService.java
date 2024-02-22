@@ -48,6 +48,12 @@ public class UserService {
         }
         entity.setPassword(ciphertextPwd);
         userRepository.save(entity);
+
+        // todo: 保存用户后，发送邮件
+        if (autoPwd) {
+            // 发送邮件
+            log.info("模拟需要发送邮件");
+        }
     }
 
     public void update(UserUpdateRo ro) {
@@ -86,14 +92,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void switchEnable(String id, boolean b) {
+    public void switchEnable(String id, boolean enable) {
         userRepository.findById(id).ifPresent(entity -> {
-            entity.setEnabled(b);
+            entity.setEnabled(enable);
             userRepository.save(entity);
         });
     }
 
-    void validateUser(UserUpdateRo ro, boolean add) {
+    private void validateUser(UserUpdateRo ro, boolean add) {
         String username = ro.getUsername();
         boolean autoPwd = ro.isAutoPwd();
         boolean resetPwd = ro.isResetPwd();

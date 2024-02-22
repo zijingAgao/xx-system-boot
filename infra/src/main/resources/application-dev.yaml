@@ -4,6 +4,8 @@ server:
 logging:
   file:
     name: log.log
+  level:
+    root: info
 
 spring:
   data:
@@ -28,5 +30,3 @@ xx-system:
   swagger:
     enable: true
   # 记住我得有效期
-  remember-me:
-    expire: 7d

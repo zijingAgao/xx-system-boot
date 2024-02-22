@@ -1,8 +1,8 @@
 package com.agao.service;
 
-import com.agao.user.entity.User;
 import com.agao.security.enums.UserRole;
-import com.agao.user.repo.UserRepository;
+import com.agao.user.ro.UserUpdateRo;
+import com.agao.user.service.UserService;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +17,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringBootTest
 public class LoginTest {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     public static final PasswordEncoder PWD_ENCODER = new BCryptPasswordEncoder();
 
     @Test
     void addUser() {
-        User user = new User();
-        user.setUsername("agao@gmail.com");
-        user.setMobile("17399889988");
-        user.setPassword(PWD_ENCODER.encode("123456"));
-        user.setRoles(Lists.newArrayList(UserRole.ADMIN));
-        user.setEnabled(true);
+        UserUpdateRo ro = new UserUpdateRo();
 
-        userRepository.save(user);
-    }
-
-    @Test
-    void find(){
-        User user = userRepository.findFirstByUsername("agao@gmail.com");
-        System.out.println(user);
+        ro.setUsername("agao@gmail.com");
+        ro.setNickName("agao");
+        ro.setMobile("17399889988");
+        ro.setAutoPwd(true);
+//        ro.setResetPwd(false);
+//        ro.setPassword();
+        ro.setRoles(Lists.newArrayList(UserRole.ADMIN));
+        ro.setEnabled(true);
+        userService.add(ro);
     }
 }

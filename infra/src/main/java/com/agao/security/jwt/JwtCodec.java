@@ -1,6 +1,8 @@
 package com.agao.security.jwt;
 
 import com.agao.security.userdetails.AuthUser;
+import com.agao.setting.SettingConst;
+import com.agao.setting.cache.SettingCache;
 import com.google.common.io.BaseEncoding;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -8,6 +10,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -35,6 +38,8 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
     private static final Integer CLOCK_SKEW_SECONDS = 5;
     private JWSSigner signer;
     private NimbusJwtDecoder decoder;
+    @Autowired
+    private SettingCache settingCache;
 //    private NimbusJwtDecoder rowDecoder;
 
     /**
@@ -98,11 +103,14 @@ public class JwtCodec implements InitializingBean, JwtDecoder {
         return null;
     }
 
-    private SecretKey getSecretKey() {
-        byte[] rawKey = BaseEncoding.base64().decode(JwtConstants.LOGIN_TOKEN_CODEC_SECRET_KEY);
-        byte[] newKey = Arrays.copyOf(rawKey, 256);
-        return new SecretKeySpec(newKey, SIGN_ALGO);
-    }
+  private SecretKey getSecretKey() {
+    String secretKey = settingCache.getConfigValue(
+            SettingConst.CFG_KEY_AUTH_TOKEN_CODEC_SECRET,
+            SettingConst.CFG_DEFAULT_AUTH_TOKEN_CODEC_SECRET);
+    byte[] rawKey = BaseEncoding.base64().decode(secretKey);
+    byte[] newKey = Arrays.copyOf(rawKey, 256);
+    return new SecretKeySpec(newKey, SIGN_ALGO);
+  }
 
     private String getSignedJWT(JWTClaimsSet claimsSet) throws JOSEException {
         SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build(), claimsSet);
