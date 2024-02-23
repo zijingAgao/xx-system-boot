@@ -14,18 +14,12 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
-import org.springframework.security.oauth2.core.OAuth2TokenValidator;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.Collection;
 
 /**
  * security废弃了 继承 WebSecurityConfigurerAdapter 的方式。改为直接链式编程注入bean
@@ -61,6 +55,9 @@ public class WebSecurityConfig {
                 // 不需要认证的部分
                 .antMatchers("/error").permitAll()
                 .antMatchers("/login", "/api/login", "/api/login/captcha", "/api/manifest").permitAll()
+                // swagger
+                .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/**", "/doc.html", "/webjars/**", "/favicon.ico").permitAll()
+
                 // 其他请求需要认证
 //                .anyRequest().hasAuthority(AclEntryPerm.AUTHED.name())
                 .anyRequest().authenticated()
@@ -90,25 +87,18 @@ public class WebSecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-//                 token 过期提醒过滤器
+                // token 过期提醒过滤器
                 .addFilterAfter(new TokenExpireRemindFilter(), BearerTokenAuthenticationFilter.class)
-//                  token续期
+                // token续期
                 .addFilterAfter(new RefreshTokenFilter(authTokenService), TokenExpireRemindFilter.class)
         ;
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .antMatchers("/swagger-ui/**")
-                .antMatchers("/swagger-resources/**")
-                .antMatchers("/v3/**")
-                .antMatchers("/doc.html")
-                .antMatchers("/webjars/**")
-                .antMatchers("/favicon.ico")
-                ;
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring();
+//    }
 
 
     @Bean
@@ -128,10 +118,6 @@ public class WebSecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    public DelegatingOAuth2TokenValidator<Jwt> delegatingTokenValidator(Collection<OAuth2TokenValidator<Jwt>> tokenValidators) {
-        return new DelegatingOAuth2TokenValidator<>(tokenValidators);
-    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

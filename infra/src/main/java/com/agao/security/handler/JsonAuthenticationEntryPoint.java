@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 登录过期的处理
+ * 请求需要认证处理
  *
  * @author Agao
  * @date 2024/2/11 22:01
