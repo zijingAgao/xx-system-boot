@@ -1,4 +1,4 @@
-package com.agao.security.jwt;
+package com.agao.security.jwt.validator;
 
 import com.agao.exception.user.UserExceptionCode;
 import com.agao.security.cache.BlackSessionCache;

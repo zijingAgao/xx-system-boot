@@ -18,7 +18,7 @@ public class SettingConst {
      * 会话有效期，token有效时间 单位：分钟
      */
     public static final String CFG_KEY_AUTH_SESSION_EXPIRE = "system.auth.session-expire";
-    public static final Integer CFG_DEFAULT_SYSTEM_SESSION_EXPIRE = 1;
+    public static final Integer CFG_DEFAULT_SYSTEM_SESSION_EXPIRE = 5;
 
     /**
      * token加密key盐值
@@ -31,4 +31,10 @@ public class SettingConst {
      */
     public static final String CFG_KEY_AUTH_REFRESH_TOKEN_EXPIRE = "system.auth.refresh-token-expire";
     public static final Integer CFG_DEFAULT_AUTH_REFRESH_TOKEN_EXPIRE = 7;
+
+    /**
+     * 单点登录开关，一个用户只能在一个设备上登录，再另外一个设备登录会挤掉之前的设备
+     */
+    public static final String CFG_KEY_AUTH_SINGLE_LOGIN = "system.auth.one-session-login";
+    public static final Boolean CFG_DEFAULT_AUTH_SINGLE_LOGIN = true;
 }

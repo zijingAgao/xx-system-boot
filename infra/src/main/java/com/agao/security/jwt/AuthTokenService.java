@@ -77,7 +77,9 @@ public class AuthTokenService {
      */
     private long getRefreshTokenExpireSeconds(boolean rememberMe) {
         if (rememberMe) {
-            int expire = settingCache.getConfigValueAsInt(SettingConst.CFG_KEY_AUTH_REFRESH_TOKEN_EXPIRE, SettingConst.CFG_DEFAULT_AUTH_REFRESH_TOKEN_EXPIRE);
+            int expire = settingCache.getConfigValueAsInt(
+                    SettingConst.CFG_KEY_AUTH_REFRESH_TOKEN_EXPIRE,
+                    SettingConst.CFG_DEFAULT_AUTH_REFRESH_TOKEN_EXPIRE);
             return Duration.ofDays(expire).getSeconds();
         }
         return getAccessTokenExpireSeconds();
@@ -89,6 +91,8 @@ public class AuthTokenService {
      * @return
      */
     private long getAccessTokenExpireSeconds() {
-        return settingCache.getConfigValueAsLong(SettingConst.CFG_KEY_AUTH_SESSION_EXPIRE, SettingConst.CFG_DEFAULT_SYSTEM_SESSION_EXPIRE);
+        return settingCache.getConfigValueAsLong(
+                SettingConst.CFG_KEY_AUTH_SESSION_EXPIRE,
+                SettingConst.CFG_DEFAULT_SYSTEM_SESSION_EXPIRE);
     }
 }

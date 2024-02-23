@@ -26,6 +26,7 @@ public enum UserExceptionCode implements IExceptionEnum {
     INVALID_REFRESH_TOKEN(1013,"无效的刷新token"),
     USER_PASSWORD_STRENGTH_NOT_MATCH(1014, "密码强度不符合要求"),
     SESSION_OUT(1015, "会话已过期"),
+    REPEAT_LOGIN(1016, "已在其他地方登录"),
     ;
 
     private Integer code;

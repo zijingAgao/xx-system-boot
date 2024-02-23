@@ -8,6 +8,8 @@ import com.agao.security.jwt.AuthToken;
 import com.agao.security.jwt.AuthTokenService;
 import com.agao.security.jwt.JwtCodec;
 import com.agao.security.userdetails.AuthUser;
+import com.agao.setting.SettingConst;
+import com.agao.setting.cache.SettingCache;
 import com.agao.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
     private LoginExpiredCache loginExpiredCache;
     @Autowired
     private JwtCodec jwtCodec;
+    @Autowired
+    private SettingCache settingCache;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse resp, Authentication auth) throws IOException, ServletException {
@@ -55,9 +59,11 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
         boolean rememberMe = rememberMe(req);
         // 生成token
         AuthToken authToken = authTokenService.authenticate(user, rememberMe);
-
-        Jwt jwt = jwtCodec.decode(authToken.getRefreshToken());
-        loginExpiredCache.logoutUserForLogin(user.getId(), jwt.getIssuedAt().toEpochMilli(), jwt.getExpiresAt().toEpochMilli());
+        // 是否开启单点登录
+        if (enableOneSessionLogin()) {
+            Jwt jwt = jwtCodec.decode(authToken.getRefreshToken());
+            loginExpiredCache.logoutUserForLogin(user.getId(), jwt.getIssuedAt().toEpochMilli(), jwt.getExpiresAt().toEpochMilli());
+        }
 
         return LoginData.builder()
                 .email(user.getUsername())
@@ -82,5 +88,16 @@ public class JsonLoginSuccessHandler implements AuthenticationSuccessHandler {
                 || value.equalsIgnoreCase("on")
                 || value.equalsIgnoreCase("yes")
                 || value.equals("1");
+    }
+
+    /**
+     * 是否开启单点登录
+     *
+     * @return
+     */
+    private boolean enableOneSessionLogin() {
+        return settingCache.getConfigValueAsBoolean(
+                SettingConst.CFG_KEY_AUTH_SINGLE_LOGIN,
+                SettingConst.CFG_DEFAULT_AUTH_SINGLE_LOGIN);
     }
 }

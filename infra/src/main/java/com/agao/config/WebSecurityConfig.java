@@ -6,7 +6,7 @@ import com.agao.security.handler.*;
 import com.agao.security.jwt.AuthTokenService;
 import com.agao.security.jwt.CustomGrantedAuthoritiesConverter;
 import com.agao.security.jwt.JwtCodec;
-import com.agao.security.jwt.LoginExpiredAuthenticationEntryPoint;
+import com.agao.security.handler.LoginExpiredHandler;
 import com.agao.security.userdetails.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -65,7 +65,7 @@ public class WebSecurityConfig {
 //                .anyRequest().hasAuthority(AclEntryPerm.AUTHED.name())
                 .anyRequest().authenticated()
                 .and()
-                .oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(new LoginExpiredAuthenticationEntryPoint())
+                .oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(new LoginExpiredHandler())
                         .jwt()
                         .decoder(jwtCodec)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))

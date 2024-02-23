@@ -1,5 +1,7 @@
 package com.agao.security.jwt;
 
+import com.agao.security.jwt.validator.BlackSessionTokenValidator;
+import com.agao.security.jwt.validator.TimeoutTokenValidator;
 import com.agao.security.userdetails.AuthUser;
 import com.agao.setting.SettingConst;
 import com.agao.setting.cache.SettingCache;
@@ -44,7 +46,6 @@ public class JwtCodec implements JwtDecoder, InitializingBean {
     private BlackSessionTokenValidator blackSessionTokenValidator;
     @Autowired
     private TimeoutTokenValidator timeoutValidator;
-//    private NimbusJwtDecoder rowDecoder;
 
     /**
      * 编码认证token
@@ -98,7 +99,6 @@ public class JwtCodec implements JwtDecoder, InitializingBean {
                 .issueTime(new Date())
                 .expirationTime(new Date(System.currentTimeMillis() + timeUnit.toMillis(expire)))
                 .build();
-        // todo: 存储刷新token
         try {
             return getSignedJWT(claimsSet);
         } catch (JOSEException e) {
@@ -137,9 +137,6 @@ public class JwtCodec implements JwtDecoder, InitializingBean {
                         new JwtTimestampValidator(Duration.of(CLOCK_SKEW_SECONDS, ChronoUnit.SECONDS)),
                         timeoutValidator,
                         blackSessionTokenValidator)));
-
-        this.decoder = NimbusJwtDecoder.withSecretKey(key).build();
-        this.decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>());
     }
 
 

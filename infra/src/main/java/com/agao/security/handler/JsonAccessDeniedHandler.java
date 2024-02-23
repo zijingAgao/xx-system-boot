@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author zhangwj
- * @date 2022/4/2 14:32
+ * @author Agao
+ * @date 2024/2/2 14:32
  */
 @Component
 public class JsonAccessDeniedHandler implements AccessDeniedHandler {
