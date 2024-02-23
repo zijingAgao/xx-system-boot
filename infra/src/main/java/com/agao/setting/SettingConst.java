@@ -18,7 +18,7 @@ public class SettingConst {
      * 会话有效期，token有效时间 单位：分钟
      */
     public static final String CFG_KEY_AUTH_SESSION_EXPIRE = "system.auth.session-expire";
-    public static final Integer CFG_DEFAULT_SYSTEM_SESSION_EXPIRE = 5;
+    public static final Integer CFG_DEFAULT_SYSTEM_SESSION_EXPIRE = 10;
 
     /**
      * token加密key盐值
