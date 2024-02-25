@@ -35,7 +35,7 @@ public class LoginExpiredHandler implements AuthenticationEntryPoint {
                 response.setContentType("application/json;charset=UTF-8");
                 ObjectMapper objectMapper = new ObjectMapper();
                 OAuth2Error error = errors.stream().findFirst().orElse(null);
-                if (error == null) {
+                if (error == null || error.getErrorCode().equals("invalid_token")) {
                     error = convert(UserExceptionCode.INVALID_TOKEN);
                 }
 
@@ -47,6 +47,7 @@ public class LoginExpiredHandler implements AuthenticationEntryPoint {
     }
 
     private OAuth2Error convert(IExceptionEnum e) {
+        // 默认值，token过期之后返回的OAuth2Error。errorCode 是个字符串 “invalid_token”
         return new OAuth2Error(e.getCode().toString(), e.getMsg(), null);
     }
 }
