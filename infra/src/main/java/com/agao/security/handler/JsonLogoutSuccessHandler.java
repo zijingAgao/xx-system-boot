@@ -66,6 +66,7 @@ public class JsonLogoutSuccessHandler implements LogoutSuccessHandler {
             }
             // 丢入黑名单session
             blackSessionCache.put(sessionId, user.getId());
+            log.info("user : {} logout,email is : {} , put into blackSessionCache, sessionId is : {}", user.getNickName(), user.getUsername(), sessionId);
         } catch (JwtException e) {
             log.warn("invalid token: {}", token);
         } catch (Exception e) {

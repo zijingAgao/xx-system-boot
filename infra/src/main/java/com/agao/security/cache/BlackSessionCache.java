@@ -1,11 +1,11 @@
 package com.agao.security.cache;
 
+import com.agao.utils.RedisClientUtils;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RBucket;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.RMapCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class BlackSessionCache {
     @Autowired
-    private RedissonClient redissonClient;
+    private RedisClientUtils redisClientUtils;
     /**
      * 黑名单缓存 结构是 key: sessionId, value: userId
      */
@@ -30,9 +30,8 @@ public class BlackSessionCache {
             .build(new CacheLoader<String, Optional<String>>() {
                 @Override
                 public Optional<String> load(String key) throws Exception {
-                    RBucket<String> bucket = redissonClient.getBucket(key);
-                    String value = bucket.get();
-                    return Optional.ofNullable(value);
+                    RMapCache<String, String> cache = redisClientUtils.getBlackSessionCache();
+                    return Optional.ofNullable(cache.get(key));
                 }
             });
 
@@ -58,7 +57,8 @@ public class BlackSessionCache {
      * @param userId    用户id
      */
     public void put(String sessionId, String userId) {
-        RBucket<String> bucket = redissonClient.getBucket(sessionId);
-        bucket.set(userId);
+        RMapCache<String, String> cache = redisClientUtils.getBlackSessionCache();
+        cache.put(sessionId, userId);
+        loadingCache.invalidate(sessionId);
     }
 }

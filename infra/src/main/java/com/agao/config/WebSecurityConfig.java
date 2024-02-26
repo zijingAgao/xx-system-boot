@@ -6,7 +6,6 @@ import com.agao.security.handler.*;
 import com.agao.security.jwt.AuthTokenService;
 import com.agao.security.jwt.CustomGrantedAuthoritiesConverter;
 import com.agao.security.jwt.JwtCodec;
-import com.agao.security.handler.LoginExpiredHandler;
 import com.agao.security.userdetails.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 /**
  * security废弃了 继承 WebSecurityConfigurerAdapter 的方式。改为直接链式编程注入bean
@@ -51,6 +53,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests()
                 // 不需要认证的部分
                 .antMatchers("/error").permitAll()
@@ -99,6 +103,18 @@ public class WebSecurityConfig {
 //    public WebSecurityCustomizer webSecurityCustomizer() {
 //        return (web) -> web.ignoring();
 //    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", configuration);
+        return new CorsFilter(source);
+    }
 
 
     @Bean

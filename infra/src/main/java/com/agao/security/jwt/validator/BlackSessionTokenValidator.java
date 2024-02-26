@@ -29,7 +29,7 @@ public class BlackSessionTokenValidator implements OAuth2TokenValidator<Jwt> {
         }
         Optional<String> userId = blackSessionCache.get(sessionId);
         if (userId.isPresent()) {
-            return OAuth2TokenValidatorResult.failure(new OAuth2Error(UserExceptionCode.SESSION_OUT.getCode().toString()));
+            return OAuth2TokenValidatorResult.failure(new OAuth2Error(UserExceptionCode.SESSION_OUT.getCode().toString(), UserExceptionCode.SESSION_OUT.getMsg(), null));
         }
         return OAuth2TokenValidatorResult.success();
     }
